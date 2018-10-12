@@ -100,9 +100,11 @@ public class VideoPlayRecyclerView extends FrameLayout {
                         updateFloatScrollStartTranslateY();
                         break;
                     // Fling
-                    case 2:
-                        floatView.setVisibility(View.GONE);
-                        break;
+                    // 这里有一个bug，如果手指在屏幕上快速滑动，但是手指并未离开，仍然有可能触发Fling
+                    // 所以这里不对Fling状态进行处理
+//                    case 2:
+//                        floatView.setVisibility(View.GONE);
+//                        break;
                 }
             }
         };
@@ -119,6 +121,7 @@ public class VideoPlayRecyclerView extends FrameLayout {
             public void onChildViewDetachedFromWindow(@NonNull View view) {
                 if (view == firstChild) {
                     firstChild = null;
+                    floatView.setVisibility(View.GONE);
                 }
             }
         });
