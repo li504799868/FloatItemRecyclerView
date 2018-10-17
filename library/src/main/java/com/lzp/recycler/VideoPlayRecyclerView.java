@@ -33,6 +33,16 @@ public class VideoPlayRecyclerView extends FrameLayout {
 
     private View firstChild = null;
 
+    /**
+     * 悬浮View的显示状态监听器
+     */
+    private OnFloatViewShowListener onFloatViewShowListener;
+
+    /**
+     * 控制每一个item是否要显示floatView
+     */
+    private FloatViewShowHook floatViewShowHook;
+
     private LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
 
     public VideoPlayRecyclerView(@NonNull Context context) {
@@ -61,6 +71,9 @@ public class VideoPlayRecyclerView extends FrameLayout {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (floatView == null) {
+                    return;
+                }
                 currentState = newState;
                 switch (newState) {
                     // 停止滑动
@@ -70,13 +83,16 @@ public class VideoPlayRecyclerView extends FrameLayout {
                     // 开始滑动
                     case 1:
                         // 保存第一个child
-                        firstChild = getFirstChild();
-                        floatView.setVisibility(View.VISIBLE);
+                        getFirstChild();
+                        updateFloatScrollStartTranslateY();
+                        showFloatView();
                         break;
                     // Fling
-                    case 2:
-                        floatView.setVisibility(View.GONE);
-                        break;
+                    // 这里有一个bug，如果手指在屏幕上快速滑动，但是手指并未离开，仍然有可能触发Fling
+                    // 所以这里不对Fling状态进行处理
+//                    case 2:
+//                        hideFloatView();
+//                        break;
                 }
             }
 
@@ -87,24 +103,16 @@ public class VideoPlayRecyclerView extends FrameLayout {
                     return;
                 }
                 switch (currentState) {
-                    case -1:
-//                        View child = recyclerView.getChildAt(0);
-//                        child.setTag(R.id.float_tag, tag);
-                        break;
                     // 停止滑动
                     case 0:
                         updateFloatScrollStopTranslateY();
                         break;
                     // 开始滑动
                     case 1:
+                        // Fling
+                    case 2:
                         updateFloatScrollStartTranslateY();
                         break;
-                    // Fling
-                    // 这里有一个bug，如果手指在屏幕上快速滑动，但是手指并未离开，仍然有可能触发Fling
-                    // 所以这里不对Fling状态进行处理
-//                    case 2:
-//                        floatView.setVisibility(View.GONE);
-//                        break;
                 }
             }
         };
@@ -121,22 +129,57 @@ public class VideoPlayRecyclerView extends FrameLayout {
             public void onChildViewDetachedFromWindow(@NonNull View view) {
                 if (view == firstChild) {
                     firstChild = null;
-                    floatView.setVisibility(View.GONE);
+                    hideFloatView();
+                    // 回调监听器
+                    if (onFloatViewShowListener != null) {
+                        onFloatViewShowListener.onHideFloatView();
+                    }
                 }
             }
         });
     }
 
-    private View getFirstChild() {
+    private void getFirstChild() {
         if (firstChild != null) {
-            return firstChild;
+            return;
         }
-        View child = recyclerView.getChildAt(0);
-        int translateY = child.getTop();
-        if (translateY < -floatView.getHeight() / 2) {
-            child = recyclerView.getChildAt(1);
+        int childPos = calculateShowFloatViewPosition();
+        if (childPos != -1) {
+            firstChild = recyclerView.getChildAt(childPos);
         }
-        return child;
+    }
+
+    /**
+     * 计算需要显示floatView的位置
+     */
+    private int calculateShowFloatViewPosition() {
+        // 如果没有设置floatViewShowHook，默认返回第一个Child
+        if (floatViewShowHook == null) {
+            return 0;
+        }
+
+        int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View child = recyclerView.getChildAt(i);
+            if (floatViewShowHook.needShowFloatView(child, firstVisiblePosition + i)) {
+                return i;
+            }
+        }
+        // -1 表示没有需要显示floatView的item
+        return -1;
+    }
+
+    private void showFloatView() {
+        if (firstChild != null) {
+            floatView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideFloatView() {
+        if (firstChild != null) {
+            floatView.setVisibility(View.GONE);
+        }
     }
 
     private void updateFloatScrollStartTranslateY() {
@@ -148,15 +191,54 @@ public class VideoPlayRecyclerView extends FrameLayout {
 
     private void updateFloatScrollStopTranslateY() {
         if (firstChild == null) {
-            firstChild = getFirstChild();
+            getFirstChild();
+            // 回调显示状态的监听器
+            // 回调监听器
+            if (firstChild != null && onFloatViewShowListener != null) {
+                onFloatViewShowListener.onShowFloatView();
+            }
         }
-        int translateY = firstChild.getTop();
-        floatView.setTranslationY(translateY);
-        floatView.setVisibility(View.VISIBLE);
+        updateFloatScrollStartTranslateY();
+        showFloatView();
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {
         recyclerView.setAdapter(adapter);
     }
+
+    public void setOnFloatViewShowListener(OnFloatViewShowListener onFloatViewShowListener) {
+        this.onFloatViewShowListener = onFloatViewShowListener;
+    }
+
+    public void setFloatViewShowHook(FloatViewShowHook floatViewShowHook) {
+        this.floatViewShowHook = floatViewShowHook;
+    }
+
+    /**
+     * 显示状态的回调监听器
+     */
+    public interface OnFloatViewShowListener {
+
+        void onShowFloatView();
+
+        void onHideFloatView();
+
+    }
+
+    /**
+     * 根据item设置是否显示浮动的View
+     */
+    public interface FloatViewShowHook {
+
+        /**
+         * 当前item是否要显示floatView
+         *
+         * @param child    itemView
+         * @param position 在列表中的位置
+         */
+        boolean needShowFloatView(View child, int position);
+
+    }
+
 
 }
