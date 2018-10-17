@@ -11,28 +11,24 @@ public class ScreenUtils {
 
     /**
      * 获得屏幕宽度
-     *
-     * @param context
-     * @return
      */
     public static int getScreenWidth(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        assert wm != null;
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.widthPixels;
     }
 
     /**
      * 获得屏幕gao度
-     *
-     * @param context
-     * @return
      */
-    public static int getScreenHeight(Context context) {
+    static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
+        assert wm != null;
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.heightPixels;
     }
