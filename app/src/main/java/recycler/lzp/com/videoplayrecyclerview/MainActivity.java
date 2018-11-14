@@ -10,21 +10,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.lzp.recycler.VideoPlayRecyclerView;
+import com.lzp.recycler.FloatItemRecyclerView;
 
 /**
  * Created by li.zhipeng on 2018/10/10.
  */
 public class MainActivity extends Activity
-        implements VideoPlayRecyclerView.FloatViewShowHook,
-        VideoPlayRecyclerView.OnFloatViewShowListener {
+        implements FloatItemRecyclerView.FloatViewShowHook<RecyclerView>,
+        FloatItemRecyclerView.OnFloatViewShowListener {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        VideoPlayRecyclerView recyclerView = findViewById(R.id.recycler_view);
+        FloatItemRecyclerView<RecyclerView> recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
         recyclerView.setFloatViewShowHook(this);
         recyclerView.setOnFloatViewShowListener(this);
@@ -32,19 +32,39 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public void onShowFloatView() {
+    public boolean needShowFloatView(View child, int position) {
+        return child.getTop() > 0
+                && child.getBottom() < ScreenUtils.getScreenHeight(this);
+    }
+
+    @Override
+    public RecyclerView initVideoPlayRecyclerView() {
+        return new RecyclerView(this);
+    }
+
+    @Override
+    public void onShowFloatView(View floatView, int position) {
         Toast.makeText(this, "显示FloatView", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onHideFloatView() {
+    public void onHideFloatView(View floatView) {
         Toast.makeText(this, "隐藏FloatView", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public boolean needShowFloatView(View child, int position) {
-        return child.getTop() > 0
-                && child.getBottom() < ScreenUtils.getScreenHeight(this);
+    public void onScrollFloatView(View floatView) {
+
+    }
+
+    @Override
+    public void onScrollFlingFloatView(View floatView) {
+
+    }
+
+    @Override
+    public void onScrollStopFloatView(View floatView) {
+
     }
 
     private class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
