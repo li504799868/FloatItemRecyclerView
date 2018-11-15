@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,21 +26,23 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
 
         FloatItemRecyclerView<RecyclerView> recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
         recyclerView.setFloatViewShowHook(this);
+        recyclerView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
         recyclerView.setOnFloatViewShowListener(this);
         recyclerView.setAdapter(new MyAdapter());
     }
 
     @Override
     public boolean needShowFloatView(View child, int position) {
-        return child.getTop() > 0
+        return child.getTop() >= 0
                 && child.getBottom() < ScreenUtils.getScreenHeight(this);
     }
 
     @Override
     public RecyclerView initVideoPlayRecyclerView() {
-        return new RecyclerView(this);
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        return recyclerView;
     }
 
     @Override

@@ -59,19 +59,19 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
 
     /**
      * 设置悬浮的View
-     * */
+     */
     public void setFloatView(View floatView) {
         this.floatView = floatView;
         if (floatView.getLayoutParams() == null) {
             floatView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         addView(this.floatView);
-        floatView.setVisibility(View.GONE);
+        this.floatView.setVisibility(View.GONE);
     }
 
     /**
      * 必须设置FloatViewShowHook，完成View的初始化操作
-     * */
+     */
     public void setFloatViewShowHook(FloatViewShowHook<V> floatViewShowHook) {
         this.floatViewShowHook = floatViewShowHook;
         recyclerView = floatViewShowHook.initVideoPlayRecyclerView();
@@ -239,7 +239,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
 
     /**
      * 找到第一个要显示悬浮item的
-     * */
+     */
     private void getFirstChild() {
         if (firstChild != null) {
             return;
@@ -283,7 +283,12 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
 
     private void showFloatView() {
         if (firstChild != null) {
-            floatView.setVisibility(View.VISIBLE);
+            floatView.post(new Runnable() {
+                @Override
+                public void run() {
+                    floatView.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 
@@ -342,27 +347,27 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
 
         /**
          * FloatView被显示
-         * */
+         */
         void onShowFloatView(View floatView, int position);
 
         /**
          * FloatView被隐藏
-         * */
+         */
         void onHideFloatView(View floatView);
 
         /**
          * FloatView被移动
-         * */
+         */
         void onScrollFloatView(View floatView);
 
         /**
          * FloatView被处于Fling状态
-         * */
+         */
         void onScrollFlingFloatView(View floatView);
 
         /**
          * FloatView由滚动变为静止状态
-         * */
+         */
         void onScrollStopFloatView(View floatView);
 
     }
