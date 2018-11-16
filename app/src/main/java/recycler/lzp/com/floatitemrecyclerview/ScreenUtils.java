@@ -1,4 +1,4 @@
-package recycler.lzp.com.videoplayrecyclerview;
+package recycler.lzp.com.floatitemrecyclerview;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

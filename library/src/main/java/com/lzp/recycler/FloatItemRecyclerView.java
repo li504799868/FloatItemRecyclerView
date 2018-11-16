@@ -74,7 +74,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
      */
     public void setFloatViewShowHook(FloatViewShowHook<V> floatViewShowHook) {
         this.floatViewShowHook = floatViewShowHook;
-        recyclerView = floatViewShowHook.initVideoPlayRecyclerView();
+        recyclerView = floatViewShowHook.initFloatItemRecyclerView();
         addRecyclerView();
         // 移动到前台
         if (floatView != null) {
@@ -385,7 +385,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
          */
         boolean needShowFloatView(View child, int position);
 
-        V initVideoPlayRecyclerView();
+        V initFloatItemRecyclerView();
 
     }
 

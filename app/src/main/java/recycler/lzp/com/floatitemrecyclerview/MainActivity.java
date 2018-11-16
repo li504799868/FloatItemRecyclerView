@@ -1,4 +1,4 @@
-package recycler.lzp.com.videoplayrecyclerview;
+package recycler.lzp.com.floatitemrecyclerview;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -39,7 +39,7 @@ public class MainActivity extends Activity
     }
 
     @Override
-    public RecyclerView initVideoPlayRecyclerView() {
+    public RecyclerView initFloatItemRecyclerView() {
         RecyclerView recyclerView = new RecyclerView(this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         return recyclerView;

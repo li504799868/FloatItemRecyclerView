@@ -1,4 +1,4 @@
-package recycler.lzp.com.videoplayrecyclerview
+package recycler.lzp.com.floatitemrecyclerview
 
 import org.junit.Test
 
