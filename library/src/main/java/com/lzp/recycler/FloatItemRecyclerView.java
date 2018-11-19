@@ -33,7 +33,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
      */
     private int currentState = -1;
 
-    private View firstChild = null;
+    private View needFloatChild = null;
 
     /**
      * 悬浮View的显示状态监听器
@@ -108,10 +108,12 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
                 switch (newState) {
                     // 停止滑动
                     case 0:
-                        View tempFirstChild = firstChild;
+                        // 对正在显示的浮层的child做个副本，为了判断显示浮层的child是否发现了变化
+                        View tempFirstChild = needFloatChild;
+                        // 更新浮层的位置，覆盖child
                         updateFloatScrollStopTranslateY();
                         // 如果firstChild没有发生变化，回调floatView滑动停止的监听
-                        if (tempFirstChild == firstChild) {
+                        if (tempFirstChild == needFloatChild) {
                             if (onFloatViewShowListener != null) {
                                 onFloatViewShowListener.onScrollStopFloatView(floatView);
                             }
@@ -120,9 +122,8 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
                     // 开始滑动
                     case 1:
                         // 保存第一个child
-//                        getFirstChild();
+                        // 更新浮层的位置
                         updateFloatScrollStartTranslateY();
-//                        showFloatView();
                         break;
                     // Fling
                     // 这里有一个bug，如果手指在屏幕上快速滑动，但是手指并未离开，仍然有可能触发Fling
@@ -172,7 +173,11 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
 
             @Override
             public void onChildViewDetachedFromWindow(@NonNull View view) {
-                if (view == firstChild && outScreen()) {
+                // 判断child是否被移除
+                // onChildViewDetachedFromWindow可能会在某一个child没有被添加时就回调
+                // 并且回调onChildViewDetachedFromWindow时并没有真正移除这个child
+                // 所以这里增加一个判断：needFloatChild是否正在屏幕中
+                if (view == needFloatChild && floatChildInScreen()) {
                     clearFirstChild();
                 }
             }
@@ -202,25 +207,25 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
      * 手动计算应该播放视频的child
      */
     public void findChildToPlay() {
-        if (firstChild == null) {
+        if (needFloatChild == null) {
             updateFloatScrollStopTranslateY();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
                 onFloatViewShowListener.onShowFloatView(floatView,
-                        recyclerView.getChildAdapterPosition(firstChild));
+                        recyclerView.getChildAdapterPosition(needFloatChild));
             }
             return;
         }
         // 获取fistChild在列表中的位置
-        int position = recyclerView.getChildAdapterPosition(firstChild);
+        int position = recyclerView.getChildAdapterPosition(needFloatChild);
         // 判断是否允许播放
-        if (floatViewShowHook.needShowFloatView(firstChild, position)) {
+        if (floatViewShowHook.needShowFloatView(needFloatChild, position)) {
             updateFloatScrollStartTranslateY();
             showFloatView();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
                 onFloatViewShowListener.onShowFloatView(floatView,
-                        recyclerView.getChildAdapterPosition(firstChild));
+                        recyclerView.getChildAdapterPosition(needFloatChild));
             }
         } else {
             // 回调隐藏状态的监听器
@@ -231,26 +236,26 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
     }
 
     /**
-     * 判断item是否已经画出了屏幕
+     * 判断item是否正在显示内容
      */
-    private boolean outScreen() {
-        return recyclerView.getChildAdapterPosition(firstChild) != -1;
+    private boolean floatChildInScreen() {
+        return recyclerView.getChildAdapterPosition(needFloatChild) != -1;
     }
 
     /**
      * 找到第一个要显示悬浮item的
      */
     private void getFirstChild() {
-        if (firstChild != null) {
+        if (needFloatChild != null) {
             return;
         }
         int childPos = calculateShowFloatViewPosition();
         if (childPos != -1) {
-            firstChild = recyclerView.getChildAt(childPos);
+            needFloatChild = recyclerView.getChildAt(childPos);
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
                 onFloatViewShowListener.onShowFloatView(floatView,
-                        recyclerView.getChildAdapterPosition(firstChild));
+                        recyclerView.getChildAdapterPosition(needFloatChild));
             }
         }
     }
@@ -282,7 +287,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
     }
 
     private void showFloatView() {
-        if (firstChild != null) {
+        if (needFloatChild != null) {
             floatView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -293,14 +298,14 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
     }
 
     private void hideFloatView() {
-        if (firstChild != null) {
+        if (needFloatChild != null) {
             floatView.setVisibility(View.GONE);
         }
     }
 
     private void updateFloatScrollStartTranslateY() {
-        if (firstChild != null) {
-            int translateY = firstChild.getTop();
+        if (needFloatChild != null) {
+            int translateY = needFloatChild.getTop();
             floatView.setTranslationY(translateY);
             if (onFloatViewShowListener != null) {
                 onFloatViewShowListener.onScrollFloatView(floatView);
@@ -309,7 +314,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
     }
 
     private void updateFloatScrollStopTranslateY() {
-        if (firstChild == null) {
+        if (needFloatChild == null) {
             getFirstChild();
         }
         updateFloatScrollStartTranslateY();
@@ -325,7 +330,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
      */
     public void clearFirstChild() {
         hideFloatView();
-        firstChild = null;
+        needFloatChild = null;
         // 回调监听器
         if (onFloatViewShowListener != null) {
             onFloatViewShowListener.onHideFloatView(floatView);
