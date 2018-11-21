@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import recycler.lzp.com.floatitemrecyclerview.viewpager.ViewPagerDemoActivity;
+
 /**
  * Created by li.zhipeng on 2018/10/10.
  */

@@ -1,4 +1,4 @@
-package recycler.lzp.com.floatitemrecyclerview;
+package recycler.lzp.com.floatitemrecyclerview.viewpager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.flyco.tablayout.SlidingTabLayout;
 
-import recycler.lzp.com.floatitemrecyclerview.viewpager.RecyclerViewFragment;
+import recycler.lzp.com.floatitemrecyclerview.R;
 
 /**
  * Created by li.zhipeng on 2018/10/10.

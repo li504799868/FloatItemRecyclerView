@@ -21,7 +21,7 @@
 
         <activity android:name=".RecyclerViewDemoActivity" />
         <activity android:name=".ListViewViewDemoActivity" />
-        <activity android:name=".ViewPagerDemoActivity" />
+        <activity android:name=".viewpager.ViewPagerDemoActivity" />
     </application>
 
 </manifest>
