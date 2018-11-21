@@ -1,4 +1,4 @@
-package com.lzp.recycler;
+package com.lzp.floatitem.recycler;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.lzp.recycler.test", appContext.getPackageName());
+        assertEquals("com.lzp.floatitem.recycler.test", appContext.getPackageName());
     }
 }

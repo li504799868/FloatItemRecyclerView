@@ -1,4 +1,4 @@
-package com.lzp.recycler;
+package com.lzp.floatitem.recycler;
 
 import org.junit.Test;
 
