@@ -319,12 +319,14 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
      * 清除floatView依赖的item，并隐藏floatView
      */
     public void clearFloatChild() {
-        hideFloatView();
-        needFloatChild = null;
-        // 回调监听器
-        if (onFloatViewShowListener != null) {
-            onFloatViewShowListener.onHideFloatView(floatView);
+        if (floatView.getVisibility() == View.VISIBLE) {
+            hideFloatView();
+            // 回调监听器
+            if (onFloatViewShowListener != null) {
+                onFloatViewShowListener.onHideFloatView(floatView);
+            }
         }
+        needFloatChild = null;
     }
 
     /**
@@ -360,7 +362,7 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
          * 当前item是否要显示floatView
          *
          * @param child    itemView
-         * @param position 在列表中的位置
+         * @param position 在列表中的位置，请注意position包含了header和footer的数量
          */
         boolean needShowFloatView(View child, int position);
 

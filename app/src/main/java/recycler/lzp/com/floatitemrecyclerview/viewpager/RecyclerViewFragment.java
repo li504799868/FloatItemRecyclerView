@@ -33,7 +33,7 @@ public class RecyclerViewFragment extends BaseFragment implements FloatItemRecyc
 
     @Override
     protected void onVisible() {
-        recyclerView.setFloatView(FloatViewController.getInstance().getFloatView());
+        recyclerView.setFloatView(FloatViewController.getInstance().getShowFloatView());
         recyclerView.findChildToPlay();
     }
 
@@ -47,6 +47,10 @@ public class RecyclerViewFragment extends BaseFragment implements FloatItemRecyc
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setFloatViewShowHook(this);
         recyclerView.setOnFloatViewShowListener(this);
+        // 如果创建Fragment的时候，已经对用户可见了，直接添加FloatView
+        if (isVisible) {
+            recyclerView.setFloatView(FloatViewController.getInstance().getShowFloatView());
+        }
         recyclerView.setAdapter(new MyAdapter());
     }
 

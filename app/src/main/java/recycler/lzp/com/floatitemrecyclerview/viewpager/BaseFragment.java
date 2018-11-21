@@ -17,6 +17,8 @@ public abstract class BaseFragment extends Fragment {
 
     private View rootView;
 
+    protected boolean isVisible;
+
     protected abstract int getLayoutId();
 
     @Nullable
@@ -37,6 +39,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        isVisible = isVisibleToUser;
         if (isVisibleToUser) {
             if (rootView != null) {
                 onVisible();

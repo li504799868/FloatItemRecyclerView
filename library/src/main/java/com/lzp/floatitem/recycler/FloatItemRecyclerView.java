@@ -194,7 +194,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
                 if (recyclerView.getAdapter() == null) {
                     return;
                 }
-                if (floatView == null){
+                if (floatView == null) {
                     return;
                 }
                 // 数据已经刷新，找到需要显示悬浮的Item
@@ -335,12 +335,14 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
      * 清除floatView依赖的item，并隐藏floatView
      */
     public void clearFloatChild() {
-        hideFloatView();
-        needFloatChild = null;
-        // 回调监听器
-        if (onFloatViewShowListener != null) {
-            onFloatViewShowListener.onHideFloatView(floatView);
+        if (floatView.getVisibility() == View.VISIBLE) {
+            hideFloatView();
+            // 回调监听器
+            if (onFloatViewShowListener != null) {
+                onFloatViewShowListener.onHideFloatView(floatView);
+            }
         }
+        needFloatChild = null;
     }
 
     public void setAdapter(RecyclerView.Adapter adapter) {

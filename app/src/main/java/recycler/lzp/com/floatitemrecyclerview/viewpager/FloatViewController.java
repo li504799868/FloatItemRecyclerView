@@ -1,12 +1,7 @@
 package recycler.lzp.com.floatitemrecyclerview.viewpager;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-
-import recycler.lzp.com.floatitemrecyclerview.R;
 
 /**
  * Created by li.zhipeng on 2018/11/21.
@@ -31,6 +26,14 @@ public class FloatViewController {
     }
 
     public View getFloatView() {
+        return floatView;
+    }
+
+    public void setFloatView(View floatView) {
+        this.floatView = floatView;
+    }
+
+    public View getShowFloatView() {
         if (floatView == null) {
             return null;
         }
@@ -41,7 +44,4 @@ public class FloatViewController {
         return floatView;
     }
 
-    public void setFloatView(View floatView) {
-        this.floatView = floatView;
-    }
 }
