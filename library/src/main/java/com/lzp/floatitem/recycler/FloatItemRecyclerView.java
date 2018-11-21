@@ -194,6 +194,9 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
                 if (recyclerView.getAdapter() == null) {
                     return;
                 }
+                if (floatView == null){
+                    return;
+                }
                 // 数据已经刷新，找到需要显示悬浮的Item
                 clearFloatChild();
                 // 找到第一个child

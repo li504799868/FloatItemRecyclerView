@@ -21,6 +21,8 @@ import in.srain.cube.views.ptr.PtrHandler;
 
 /**
  * Created by li.zhipeng on 2018/10/10.
+ * <p>
+ * FloatItemListView演示demo
  */
 public class ListViewViewDemoActivity extends AppCompatActivity
         implements FloatItemListView.ListViewFloatShowHook<ListView>,

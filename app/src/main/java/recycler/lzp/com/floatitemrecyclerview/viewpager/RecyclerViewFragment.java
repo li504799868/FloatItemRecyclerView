@@ -1,6 +1,5 @@
-package recycler.lzp.com.floatitemrecyclerview;
+package recycler.lzp.com.floatitemrecyclerview.viewpager;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,23 +13,39 @@ import android.widget.Toast;
 import com.lzp.floatitem.OnFloatViewShowListener;
 import com.lzp.floatitem.recycler.FloatItemRecyclerView;
 
+import recycler.lzp.com.floatitemrecyclerview.R;
+import recycler.lzp.com.floatitemrecyclerview.ScreenUtils;
+
 /**
- * Created by li.zhipeng on 2018/10/10.
+ * Created by li.zhipeng on 2018/11/21.
  * <p>
- * FloatItemRecyclerView演示demo
+ * 显示浮层的Fragment，内部使用FloatItemRecyclerView，用于ViewPager中
  */
-public class RecyclerViewDemoActivity extends Activity
-        implements FloatItemRecyclerView.RecyclerViewFloatShowHook<RecyclerView>,
+public class RecyclerViewFragment extends BaseFragment implements FloatItemRecyclerView.RecyclerViewFloatShowHook<RecyclerView>,
         OnFloatViewShowListener {
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recycler);
+    private FloatItemRecyclerView<RecyclerView> recyclerView;
 
-        FloatItemRecyclerView<RecyclerView> recyclerView = findViewById(R.id.recycler_view);
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_recycler;
+    }
+
+    @Override
+    protected void onVisible() {
+        recyclerView.setFloatView(FloatViewController.getInstance().getFloatView());
+        recyclerView.findChildToPlay();
+    }
+
+    @Override
+    protected void onInVisible() {
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setFloatViewShowHook(this);
-        recyclerView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
         recyclerView.setOnFloatViewShowListener(this);
         recyclerView.setAdapter(new MyAdapter());
     }
@@ -38,24 +53,24 @@ public class RecyclerViewDemoActivity extends Activity
     @Override
     public boolean needShowFloatView(View child, int position) {
         return child.getTop() >= 0
-                && child.getBottom() < ScreenUtils.getScreenHeight(this);
+                && child.getBottom() < ScreenUtils.getScreenHeight(requireContext());
     }
 
     @Override
     public RecyclerView initFloatItemRecyclerView() {
-        RecyclerView recyclerView = new RecyclerView(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView recyclerView = new RecyclerView(requireContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         return recyclerView;
     }
 
     @Override
     public void onShowFloatView(View floatView, int position) {
-        Toast.makeText(this, "显示FloatView", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "显示FloatView", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onHideFloatView(View floatView) {
-        Toast.makeText(this, "隐藏FloatView", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "隐藏FloatView", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -78,7 +93,7 @@ public class RecyclerViewDemoActivity extends Activity
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-            return new MyViewHolder(LayoutInflater.from(RecyclerViewDemoActivity.this).inflate(R.layout.item_view, viewGroup, false));
+            return new MyViewHolder(LayoutInflater.from(requireContext()).inflate(R.layout.item_view, viewGroup, false));
         }
 
         @Override
@@ -98,5 +113,4 @@ public class RecyclerViewDemoActivity extends Activity
             super(itemView);
         }
     }
-
 }

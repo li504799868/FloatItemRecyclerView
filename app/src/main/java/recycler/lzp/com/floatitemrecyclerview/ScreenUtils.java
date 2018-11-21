@@ -24,7 +24,7 @@ public class ScreenUtils {
     /**
      * 获得屏幕gao度
      */
-    static int getScreenHeight(Context context) {
+    public static int getScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics outMetrics = new DisplayMetrics();
