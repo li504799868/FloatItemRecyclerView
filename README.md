@@ -1,4 +1,4 @@
-# FloatItemRecyclerView and #FloatItemListView
+# FloatItemRecyclerView and FloatItemListView
 实现RecyclerView和ListView的item添加悬浮层的效果
 
 效果图：</br>
