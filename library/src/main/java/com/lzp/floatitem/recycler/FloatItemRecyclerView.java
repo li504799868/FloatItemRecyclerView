@@ -215,12 +215,12 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
             updateFloatScrollStopTranslateY();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         recyclerView.getChildAdapterPosition(needFloatChild));
             }
             return;
         }
-        // 获取fistChild在列表中的位置
+        // 获取needFloatChild在列表中的位置
         int position = recyclerView.getChildAdapterPosition(needFloatChild);
         // 判断是否允许播放
         if (floatViewShowHook.needShowFloatView(needFloatChild, position)) {
@@ -228,13 +228,13 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
             showFloatView();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         recyclerView.getChildAdapterPosition(needFloatChild));
             }
         } else {
             // 回调隐藏状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onHideFloatView(floatView);
+                onFloatViewShowListener.onHideFloatView(floatView, needFloatChild);
             }
         }
     }
@@ -258,7 +258,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
             needFloatChild = recyclerView.getChildAt(childPos);
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         recyclerView.getChildAdapterPosition(needFloatChild));
             }
         }
@@ -339,7 +339,7 @@ public class FloatItemRecyclerView<V extends RecyclerView> extends FrameLayout {
             hideFloatView();
             // 回调监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onHideFloatView(floatView);
+                onFloatViewShowListener.onHideFloatView(floatView, needFloatChild);
             }
         }
         needFloatChild = null;

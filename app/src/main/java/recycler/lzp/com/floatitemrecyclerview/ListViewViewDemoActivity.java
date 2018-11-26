@@ -78,12 +78,12 @@ public class ListViewViewDemoActivity extends AppCompatActivity
     }
 
     @Override
-    public void onShowFloatView(View floatView, int position) {
+    public void onShowFloatView(View floatView, View child, int position) {
         Toast.makeText(this, "显示FloatView" + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onHideFloatView(View floatView) {
+    public void onHideFloatView(View floatView, View child) {
         Toast.makeText(this, "隐藏FloatView", Toast.LENGTH_SHORT).show();
     }
 

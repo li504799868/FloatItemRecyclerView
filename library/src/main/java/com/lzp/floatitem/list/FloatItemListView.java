@@ -144,8 +144,8 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
 //                        break;
                 }
                 // 回调滚动监听器
-                if (onScrollListeners.size()> 0){
-                    for (AbsListView.OnScrollListener listener: onScrollListeners){
+                if (onScrollListeners.size() > 0) {
+                    for (AbsListView.OnScrollListener listener : onScrollListeners) {
                         listener.onScrollStateChanged(view, scrollState);
                     }
                 }
@@ -182,8 +182,8 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
                         break;
                 }
                 // 回调滚动监听器
-                if (onScrollListeners.size()> 0){
-                    for (AbsListView.OnScrollListener listener: onScrollListeners){
+                if (onScrollListeners.size() > 0) {
+                    for (AbsListView.OnScrollListener listener : onScrollListeners) {
                         listener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
                     }
                 }
@@ -227,7 +227,7 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
             updateFloatScrollStopTranslateY();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         getChildAdapterPosition(needFloatChild));
             }
             return;
@@ -240,13 +240,13 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
             showFloatView();
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         getChildAdapterPosition(needFloatChild));
             }
         } else {
             // 回调隐藏状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onHideFloatView(floatView);
+                onFloatViewShowListener.onHideFloatView(floatView, needFloatChild);
             }
         }
     }
@@ -265,7 +265,7 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
             needFloatChildPosition = getChildAdapterPosition(needFloatChild);
             // 回调显示状态的监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onShowFloatView(floatView,
+                onFloatViewShowListener.onShowFloatView(floatView, needFloatChild,
                         getChildAdapterPosition(needFloatChild));
             }
         }
@@ -342,7 +342,7 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
             hideFloatView();
             // 回调监听器
             if (onFloatViewShowListener != null) {
-                onFloatViewShowListener.onHideFloatView(floatView);
+                onFloatViewShowListener.onHideFloatView(floatView, needFloatChild);
             }
         }
         needFloatChild = null;

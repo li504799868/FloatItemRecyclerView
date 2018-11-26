@@ -10,13 +10,17 @@ public interface OnFloatViewShowListener {
 
     /**
      * FloatView被显示
+     *
+     * @param floatView 浮层
+     * @param child     显示浮层的child
+     * @param position  child在RecyclerView中的位置
      */
-    void onShowFloatView(View floatView, int position);
+    void onShowFloatView(View floatView, View child, int position);
 
     /**
      * FloatView被隐藏
      */
-    void onHideFloatView(View floatView);
+    void onHideFloatView(View floatView, View child);
 
     /**
      * FloatView被移动
