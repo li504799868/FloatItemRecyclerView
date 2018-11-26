@@ -1,5 +1,5 @@
-# VideoPlayRecyclerView
-实现RecyclerView的item添加悬浮层的效果
+# FloatItemRecyclerView and #FloatItemListView
+实现RecyclerView和ListView的item添加悬浮层的效果
 
 效果图：</br>
 <img src="https://img-blog.csdnimg.cn/20181115111726932.gif"/>
@@ -32,12 +32,12 @@
         /**
          * FloatView被显示
          */
-        void onShowFloatView(View floatView, int position);
+        void onShowFloatView(View floatView, View child, int position);
 
         /**
          * FloatView被隐藏
          */
-        void onHideFloatView(View floatView);
+        void onHideFloatView(View floatView, View child);
 
         /**
          * FloatView被移动
@@ -63,6 +63,28 @@
     recyclerView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
     recyclerView.setOnFloatViewShowListener(this);
     recyclerView.setAdapter(new MyAdapter());
+    
+    FloatItemListView floatItemListView = findViewById(R.id.recycler_view);
+    floatItemListView.setFloatViewShowHook(this);
+    floatItemListView.setFloatView(getLayoutInflater().inflate(R.layout.float_view, (ViewGroup) getWindow().getDecorView(), false));
+    floatItemListView.setOnFloatViewShowListener(this);
+    floatItemListView.setAdapter(new MyAdapter());
+    
+## FloatItemListView扩展滑动监听：
+
+    public void addOnScrollListener(AbsListView.OnScrollListener listener) {
+        if (!onScrollListeners.contains(listener)) {
+            onScrollListeners.add(listener);
+        }
+    }
+
+    public void removeOnScrollListener(AbsListView.OnScrollListener listener) {
+        onScrollListeners.remove(listener);
+    }
+
+    public void clearOnScrollListener(AbsListView.OnScrollListener listener) {
+        onScrollListeners.clear();
+    }
     
 如果您觉得不错，感谢打赏一个猪蹄：
 
