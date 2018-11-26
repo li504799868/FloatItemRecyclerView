@@ -9,6 +9,8 @@
 
 <h1>使用步骤</h1>
 
+demo中包含FloatItemRecyclerViewDemo，FloatItemListViewDemo，以及在ViewPager中使用的优化方案。
+
 1、实现FloatViewShowHook接口
 
     public interface FloatViewShowHook<V extends RecyclerView> {
