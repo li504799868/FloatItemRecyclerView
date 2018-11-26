@@ -13,6 +13,8 @@ import android.widget.ListView;
 
 import com.lzp.floatitem.OnFloatViewShowListener;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by li.zhipeng on 2018/10/10.
@@ -52,6 +54,11 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
      * 控制每一个item是否要显示floatView
      */
     private ListViewFloatShowHook<V> floatViewShowHook;
+
+    /**
+     * 滚动监听
+     */
+    private ArrayList<OnScrollListener> onScrollListeners = new ArrayList<>();
 
     public FloatItemListView(@NonNull Context context) {
         this(context, null);
@@ -136,6 +143,12 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
 //                        hideFloatView();
 //                        break;
                 }
+                // 回调滚动监听器
+                if (onScrollListeners.size()> 0){
+                    for (OnScrollListener listener: onScrollListeners){
+                        listener.onScrollStateChanged(view, scrollState);
+                    }
+                }
             }
 
             @Override
@@ -167,6 +180,12 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
                         }
 
                         break;
+                }
+                // 回调滚动监听器
+                if (onScrollListeners.size()> 0){
+                    for (OnScrollListener listener: onScrollListeners){
+                        listener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+                    }
                 }
             }
         };
@@ -353,6 +372,20 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
         this.onFloatViewShowListener = onFloatViewShowListener;
     }
 
+    public void addOnScrollListener(OnScrollListener listener) {
+        if (!onScrollListeners.contains(listener)) {
+            onScrollListeners.add(listener);
+        }
+    }
+
+    public void removeOnScrollListener(OnScrollListener listener) {
+        onScrollListeners.remove(listener);
+    }
+
+    public void clearOnScrollListener(OnScrollListener listener) {
+        onScrollListeners.clear();
+    }
+
     /**
      * 根据item设置是否显示浮动的View
      */
@@ -370,5 +403,13 @@ public class FloatItemListView<V extends ListView> extends FrameLayout {
 
     }
 
+    /**
+     * 继承ListView的滚动监听，实现可以设置多个监听
+     *
+     * 因为ListView不支持设置多个OnScrollListener，所以扩展一下ListView
+     */
+    public interface OnScrollListener extends AbsListView.OnScrollListener {
+
+    }
 
 }
