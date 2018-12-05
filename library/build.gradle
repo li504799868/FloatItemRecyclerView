@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion 28
@@ -34,18 +34,18 @@ dependencies {
     api 'com.android.support:recyclerview-v7:28.0.0'
 }
 
-//sourceSets {
-//    main.java.srcDirs += 'src/main/kotlin'
-//}
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
 
-//publish {
-//    userOrg = 'lizp' // 创建repo的位置
-//    groupId = 'com.lzp' // 引用的分组名称
-//    artifactId = 'VideoPlayRecyclerView'//项目名称
-//    publishVersion = '1.0.0'//版本号
-//    desc = '列表播放视频的RecyclerView'
-//    website = 'https://github.com/li504799868/VideoPlayRecyclerView'
-//}
+publish {
+    userOrg = 'lizp' // 创建repo的位置
+    groupId = 'com.lzp' // 引用的分组名称
+    artifactId = 'FloatItemRecyclerView'//项目名称
+    publishVersion = '1.2.0'//版本号
+    desc = '列表item悬浮添加悬浮层的扩展库，支持RecyclerView和ListView'
+    website = 'https://github.com/li504799868/FloatItemRecyclerView'
+}
 
 repositories {
     mavenCentral()
