@@ -11,6 +11,10 @@
 
 demo中包含FloatItemRecyclerViewDemo，FloatItemListViewDemo，以及在ViewPager中使用的优化方案。
 
+添加gradle依赖:
+
+    compile 'com.lzp:FloatItemRecyclerView:1.2.0'
+
 1、实现FloatViewShowHook接口
 
     public interface FloatViewShowHook<V extends RecyclerView> {
